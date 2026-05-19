@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: order-intelligence-rag
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: GROQ_API_KEY
+        sync: false
+      - key: LANGCHAIN_API_KEY
+        sync: false
+      - key: LANGCHAIN_PROJECT
+        value: order-intelligence-rag
+      - key: GROQ_MODEL
+        value: llama3-8b-8192
+    plan: free

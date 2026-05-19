@@ -1,0 +1,19 @@
+fastapi
+uvicorn[standard]
+pydantic
+
+# LangChain ecosystem
+langchain
+langchain-community
+langchain-groq
+langchain-huggingface
+langsmith
+
+# Vector store
+chromadb
+
+# Embeddings (runs locally — no API key needed)
+sentence-transformers
+
+# Utilities
+python-dotenv

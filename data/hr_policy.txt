@@ -1,0 +1,144 @@
+ENTERPRISE HR POLICY DOCUMENT
+Version: 2.1 | Effective Date: January 2025
+================================================================
+
+SECTION 1: LEAVE POLICY
+----------------------------------------------------------------
+1.1 Annual Leave
+Employees are entitled to 24 days of paid annual leave per calendar year.
+New joiners receive leave on a pro-rata basis from the date of joining.
+Unused leave up to 12 days can be carried forward to the next calendar year.
+Leave encashment is permitted for a maximum of 6 days per year during appraisal cycle.
+
+1.2 Sick Leave
+Employees are entitled to 12 days of sick leave per year.
+Sick leave beyond 3 consecutive days requires a medical certificate.
+Sick leave cannot be carried forward or encashed.
+
+1.3 Maternity & Paternity Leave
+Maternity leave: 26 weeks for the first two children, 12 weeks thereafter.
+Paternity leave: 5 working days, to be availed within 6 months of childbirth.
+Adoption leave: 12 weeks for the primary caregiver.
+
+1.4 Emergency / Bereavement Leave
+Up to 5 days of paid emergency leave for immediate family bereavement.
+Immediate family includes spouse, children, parents, and siblings.
+
+================================================================
+
+SECTION 2: PERFORMANCE APPRAISAL POLICY
+----------------------------------------------------------------
+2.1 Appraisal Cycle
+The company follows an annual appraisal cycle from April to March.
+Mid-year check-ins are conducted in October for all employees.
+Performance ratings are: Outstanding (5), Exceeds Expectations (4),
+Meets Expectations (3), Needs Improvement (2), Unsatisfactory (1).
+
+2.2 Increment Policy
+Increment percentages are linked to performance ratings:
+- Outstanding: 20–30%
+- Exceeds Expectations: 15–20%
+- Meets Expectations: 8–12%
+- Needs Improvement: 0–5%
+- Unsatisfactory: No increment, placed on PIP
+
+2.3 Performance Improvement Plan (PIP)
+Employees rated Unsatisfactory are placed on a 90-day PIP.
+PIP goals are set jointly by the manager and HR.
+Failure to meet PIP targets may result in termination.
+
+================================================================
+
+SECTION 3: REMOTE WORK & HYBRID POLICY
+----------------------------------------------------------------
+3.1 Hybrid Work Model
+The company follows a 3-2 hybrid model: 3 days in office, 2 days remote.
+Office days are Tuesday, Wednesday, and Thursday by default.
+Team leads may adjust office days based on project requirements.
+
+3.2 Remote Work Eligibility
+Employees completing 6 months of tenure are eligible for hybrid work.
+Employees on PIP are required to work from office full-time.
+Remote work from outside the city requires prior manager approval.
+
+3.3 Equipment Policy
+The company provides a laptop and one external monitor for remote work.
+Internet allowance of ₹1,000/month is provided for remote employees.
+Employees are responsible for the security of company equipment at home.
+
+================================================================
+
+SECTION 4: CODE OF CONDUCT
+----------------------------------------------------------------
+4.1 Workplace Behavior
+All employees must maintain professional conduct in office and virtual settings.
+Harassment, discrimination, and bullying are strictly prohibited.
+Violations must be reported to HR within 48 hours of occurrence.
+
+4.2 Conflict of Interest
+Employees must disclose any personal business interests that may conflict with company interests.
+Moonlighting (working for a competitor) without written approval is a terminable offense.
+Gifts above ₹2,000 in value from vendors must be disclosed and returned.
+
+4.3 Data Confidentiality
+Employees must not share proprietary company data with external parties.
+All confidential documents must be stored in company-approved cloud systems.
+Violation of data confidentiality may result in immediate termination and legal action.
+
+================================================================
+
+SECTION 5: COMPENSATION & BENEFITS
+----------------------------------------------------------------
+5.1 Salary Structure
+CTC comprises: Basic (40%), HRA (20%), Special Allowance (30%), PF Contribution (10%).
+Salaries are credited on the last working day of each month.
+
+5.2 Health Insurance
+The company provides group health insurance of ₹5 lakhs per employee.
+Family floater option covers spouse and up to 2 children at ₹3 lakhs additional premium borne by the employee.
+Pre-existing conditions are covered after a 2-year waiting period.
+
+5.3 Provident Fund
+PF is deducted at 12% of basic salary from both employee and employer.
+Employees can withdraw PF after 5 years of continuous service for tax-free benefits.
+
+5.4 Gratuity
+Gratuity is payable after 5 years of continuous service.
+Formula: (Last drawn basic salary × 15 × years of service) / 26
+
+================================================================
+
+SECTION 6: RECRUITMENT & ONBOARDING
+----------------------------------------------------------------
+6.1 Referral Policy
+Employee referral bonus: ₹25,000 for non-tech roles, ₹50,000 for tech roles.
+Referral bonus is paid in two installments: 50% at joining, 50% after 6 months.
+Referrals from direct reporting managers are not eligible.
+
+6.2 Onboarding
+New joiners attend a 3-day mandatory induction program.
+IT access and equipment are provisioned within 24 hours of joining.
+A buddy is assigned to every new joiner for the first 60 days.
+
+6.3 Background Verification
+All offers are subject to successful background verification.
+BGV covers employment history (7 years), education, and criminal record.
+Offers may be revoked if discrepancies are found post-joining.
+
+================================================================
+
+SECTION 7: SEPARATION POLICY
+----------------------------------------------------------------
+7.1 Notice Period
+Notice period is 90 days for all employees with tenure above 1 year.
+Notice period is 30 days for employees in probation (first 6 months).
+Notice period buyout is allowed at the discretion of the business unit head.
+
+7.2 Exit Process
+Employees must complete a structured exit checklist including knowledge transfer.
+Full and final settlement is processed within 45 days of last working day.
+Experience letters and relieving letters are issued within 30 days.
+
+7.3 Rehire Policy
+Former employees are eligible for rehire after a gap of 6 months.
+Employees terminated for misconduct or data breach are permanently ineligible for rehire.
