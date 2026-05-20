@@ -2,11 +2,6 @@ import os
 import logging
 from pathlib import Path
 
-from langchain_community.document_loaders import TextLoader, DirectoryLoader
-from langchain_text_splitters import RecursiveCharacterTextSplitter
-from langchain_community.vectorstores import Chroma
-from langchain_huggingface import HuggingFaceEmbeddings
-from langchain_groq import ChatGroq
 from langchain_core.prompts import PromptTemplate
 
 logger = logging.getLogger(__name__)
@@ -40,7 +35,18 @@ class RAGPipeline:
         self.data_dir = Path("data")
         self.vectorstore_dir = Path("vectorstore")
         self.vectorstore = None
+        self.retriever = None
+        self.embeddings = None
+        self.llm = None
         self.qa_chain = None
+        self.pipeline_ready = False
+
+        self.embedding_model_name = os.getenv(
+            "EMBEDDING_MODEL",
+            "sentence-transformers/all-MiniLM-L3-v2"
+        )
+        self.groq_model_name = os.getenv("GROQ_MODEL", "llama3-8b-8192")
+        self.groq_api_key = os.getenv("GROQ_API_KEY")
 
         # LangSmith tracing (optional)
         if os.getenv("LANGCHAIN_API_KEY"):
@@ -52,31 +58,46 @@ class RAGPipeline:
         else:
             logger.info("LangSmith tracing disabled.")
 
-        # Embeddings — local, no API cost
-        logger.info("Loading embedding model...")
+        if not self.groq_api_key:
+            raise ValueError("GROQ_API_KEY environment variable is required.")
+
+    def _init_embeddings(self):
+        if self.embeddings is not None:
+            return
+
+        from langchain_huggingface import HuggingFaceEmbeddings
+
+        logger.info("Loading embedding model: %s", self.embedding_model_name)
         self.embeddings = HuggingFaceEmbeddings(
-            model_name="sentence-transformers/all-MiniLM-L6-v2",
+            model_name=self.embedding_model_name,
             model_kwargs={"device": "cpu"},
             encode_kwargs={"normalize_embeddings": True}
         )
         logger.info("Embedding model loaded.")
 
-        # Groq LLM
-        groq_api_key = os.getenv("GROQ_API_KEY")
-        if not groq_api_key:
-            raise ValueError("GROQ_API_KEY environment variable is required.")
+    def _init_llm(self):
+        if self.llm is not None:
+            return
+
+        from langchain_groq import ChatGroq
 
         self.llm = ChatGroq(
-            api_key=groq_api_key,
-            model_name=os.getenv("GROQ_MODEL", "llama3-8b-8192"),
-            temperature=0.0,   # Zero temp for factual SOP answers
+            api_key=self.groq_api_key,
+            model_name=self.groq_model_name,
+            temperature=0.0,
             max_tokens=1024,
         )
-        logger.info(f"Groq LLM initialized: {os.getenv('GROQ_MODEL', 'llama3-8b-8192')}")
+        logger.info("Groq LLM initialized: %s", self.groq_model_name)
 
     def ingest_documents(self):
         """Load, chunk, embed, and persist documents into ChromaDB."""
+        self._init_embeddings()
+
         chroma_path = str(self.vectorstore_dir / "chroma_db")
+
+        from langchain_community.document_loaders import TextLoader, DirectoryLoader
+        from langchain_text_splitters import RecursiveCharacterTextSplitter
+        from langchain_community.vectorstores import Chroma
 
         if Path(chroma_path).exists():
             logger.info("Existing vectorstore found — loading...")
@@ -98,8 +119,8 @@ class RAGPipeline:
 
             # Chunking strategy: smaller chunks for precise SLA/policy retrieval
             splitter = RecursiveCharacterTextSplitter(
-                chunk_size=400,
-                chunk_overlap=80,
+                chunk_size=256,
+                chunk_overlap=48,
                 separators=["\n\n", "\n", ". ", " "]
             )
             chunks = splitter.split_documents(documents)
@@ -133,8 +154,9 @@ class RAGPipeline:
 
     def query(self, question: str) -> dict:
         """Run a question through the RAG pipeline and return answer + sources."""
-        if not self.qa_chain:
-            raise RuntimeError("Pipeline not ready. Call ingest_documents() first.")
+        if not self.pipeline_ready:
+            self.ingest_documents()
+            self.pipeline_ready = True
 
         logger.info(f"Query received: {question}")
 
@@ -150,7 +172,7 @@ class RAGPipeline:
         # 3) Format prompt and invoke LLM directly (avoids deprecated RetrievalQA)
         prompt_text = ORDER_PROMPT_TEMPLATE.format(context=context, question=question)
 
-        # ChatGroq expects a list of (role, content) tuples or message objects
+        self._init_llm()
         ai_msg = self.llm.invoke([("human", prompt_text)])
 
         # Extract text content from the returned AIMessage-like object

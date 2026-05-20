@@ -17,8 +17,14 @@ async def lifespan(app: FastAPI):
     global rag
     logger.info("Initializing Order Intelligence RAG pipeline...")
     rag = RAGPipeline()
-    rag.ingest_documents()
-    logger.info("RAG pipeline ready.")
+    if os.getenv("PREBUILD_VECTORSTORE", "false").lower() in ("1", "true", "yes"):
+        rag.ingest_documents()
+        rag.pipeline_ready = True
+        logger.info("RAG pipeline ready.")
+    else:
+        logger.info(
+            "RAG pipeline initialized in deferred mode; vectorstore will build on first query."
+        )
     yield
     logger.info("Shutting down.")
 
