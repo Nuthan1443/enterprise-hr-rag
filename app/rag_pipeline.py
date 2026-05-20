@@ -7,7 +7,6 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_community.vectorstores import Chroma
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_groq import ChatGroq
-from langchain.chains import RetrievalQA
 from langchain.prompts import PromptTemplate
 
 logger = logging.getLogger(__name__)
@@ -117,23 +116,20 @@ class RAGPipeline:
 
     def _build_chain(self):
         """Assemble the RetrievalQA chain with MMR retrieval."""
-        retriever = self.vectorstore.as_retriever(
-            search_type="mmr",          # Maximal Marginal Relevance
+        # Configure retriever (MMR) — we'll call it from `query()` directly
+        self.retriever = self.vectorstore.as_retriever(
+            search_type="mmr",  # Maximal Marginal Relevance
             search_kwargs={
-                "k": 5,                 # Return top 5 chunks
-                "fetch_k": 15,          # Fetch 15, then diversify to 5
-                "lambda_mult": 0.7      # 0 = max diversity, 1 = max relevance
-            }
+                "k": 5,  # Return top 5 chunks
+                "fetch_k": 15,  # Fetch 15, then diversify to 5
+                "lambda_mult": 0.7,  # 0 = max diversity, 1 = max relevance
+            },
         )
 
-        self.qa_chain = RetrievalQA.from_chain_type(
-            llm=self.llm,
-            chain_type="stuff",
-            retriever=retriever,
-            return_source_documents=True,
-            chain_type_kwargs={"prompt": ORDER_PROMPT}
-        )
-        logger.info("RetrievalQA chain assembled.")
+        # `RetrievalQA` was removed in LangChain v1; instead we perform
+        # retrieval + direct LLM invocation in `query()` to keep compatibility.
+        self.qa_chain = None
+        logger.info("Retriever configured for manual QA flow.")
 
     def query(self, question: str) -> dict:
         """Run a question through the RAG pipeline and return answer + sources."""
@@ -141,16 +137,30 @@ class RAGPipeline:
             raise RuntimeError("Pipeline not ready. Call ingest_documents() first.")
 
         logger.info(f"Query received: {question}")
-        result = self.qa_chain.invoke({"query": question})
 
-        # Return first 200 chars of each source chunk for auditability
-        source_chunks = [
-            doc.page_content[:200] + "..."
-            for doc in result.get("source_documents", [])
-        ]
+        # 1) Retrieve top documents (try retriever API, fall back to vectorstore search)
+        try:
+            docs = self.retriever.get_relevant_documents(question)
+        except Exception:
+            docs = self.vectorstore.similarity_search(question, k=5)
+
+        # 2) Build context from retrieved docs
+        context = "\n\n".join([d.page_content for d in docs[:5]])
+
+        # 3) Format prompt and invoke LLM directly (avoids deprecated RetrievalQA)
+        prompt_text = ORDER_PROMPT_TEMPLATE.format(context=context, question=question)
+
+        # ChatGroq expects a list of (role, content) tuples or message objects
+        ai_msg = self.llm.invoke([("human", prompt_text)])
+
+        # Extract text content from the returned AIMessage-like object
+        answer_text = getattr(ai_msg, "content", str(ai_msg))
+
+        # Return truncated source chunks for auditability
+        source_chunks = [doc.page_content[:200] + "..." for doc in docs]
 
         return {
-            "answer": result["result"],
+            "answer": answer_text,
             "source_chunks": source_chunks,
-            "model_used": os.getenv("GROQ_MODEL", "llama3-8b-8192")
+            "model_used": os.getenv("GROQ_MODEL", "llama3-8b-8192"),
         }
